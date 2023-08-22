@@ -113,15 +113,48 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
+    @classmethod
+    def parseArguments(self, args):
+        """converts the the list passed into key value pairs"""
+        dictionary = {}
+        for arg in args:
+            key, value = arg.split("=")
+            if value[0] == '"':
+                value = value.strip('"')
+                value = value.replace('"', '\"')
+                value = value.replace('_', ' ')
+
+            elif '.' in value:
+                value = float(value)
+
+            elif ',' in value:
+                continue
+            else:
+                value = int(value)
+
+            dictionary[key] = value
+
+        return dictionary
+
     def do_create(self, args):
         """ Create an object of any class"""
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+
+        cmds = args.split()  # split the arguments
+        class_name = cmds[0]
+        if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+        new_instance = HBNBCommand.classes[class_name]()
+        # update parameters passed
+        cmds = cmds[1:]  # take all parameters excluding the class name
+        attributes = HBNBCommand.parseArguments(cmds)
+        if attributes:
+            for key, value in attributes.items():
+                setattr(new_instance, key, value)
+
         storage.save()
         print(new_instance.id)
         storage.save()
