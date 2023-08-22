@@ -34,21 +34,24 @@ class DBStorage():
 
     def all(self, cls=None):
         """show all data from the database"""
+        new = {}
+        classes = {"State": State, "City": City, "User": User,
+                   "Place": Place, "Review": Review, "Amenity": Amenity}
         if cls:
-            objs = self.__session.query(cls).all()
+            if type(cls) == str and cls in classes:
+                for obj in self.__session.query(classes[cls]).all():
+                    key = str(obj.__class__.__name__) + "." + str(obj.id)
+                    new[key] = obj
+            elif cls.__name__ in classes:
+                for obj in self.__session.query(cls).all():
+                    key = str(obj.__class__.__name__) + "." + str(obj.id)
+                    new[key] = obj
 
         else:
-            classes = [State, City, User, Place, Review, Amenity]
-            objs = []
-            for item in classes:
-                objs += self.__session.query(item)
-
-        # create and save fetched classes
-        new = {}
-
-        for obj in objs:
-            key = '{}.{}'.format(type(obj).__name__, obj.id)
-            new[key] = obj
+            for key, value in classes.items():
+                for obj in self.__session.query(value).all():
+                    key = str(value.__name__) + "." + str(obj.id)
+                    new[key] = obj
 
         return new
 
@@ -70,8 +73,8 @@ class DBStorage():
         """creates all tables in database and also a session"""
         Base.metadata.create_all(self.__engine)
 
-        self.__session = sessionmaker(bind=self.__engine,
-                                      expire_on_commit=False)
+        session = sessionmaker(bind=self.__engine,
+                               expire_on_commit=False)
 
-        Session = scoped_session(self.__session)
+        Session = scoped_session(session)
         self.__session = Session()
