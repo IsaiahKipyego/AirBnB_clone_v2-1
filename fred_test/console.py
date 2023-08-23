@@ -145,7 +145,7 @@ class HBNBCommand(cmd.Cmd):
                 val = float(val) if HBNBCommand.isfloat(val) else val
                 new_instance.__dict__[key] = val
 
-        # storage.save()
+        storage.save()
         print(new_instance.id)
         new_instance.save()
 

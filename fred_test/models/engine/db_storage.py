@@ -1,7 +1,13 @@
 #!/usr/bin/python3
 """This module defines a class to manage sqldb storage for hbnb clone
 """
-
+from models.base_model import BaseModel, Base
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 from sqlalchemy import (create_engine)
 from sqlalchemy.orm import sessionmaker, scoped_session
 import os
@@ -13,10 +19,10 @@ class DBStorage:
     __session = None
     __envs = {
         'env': os.getenv('HBNB_ENV'),
-        'user': os.getenv('HBNB_MYSQL_USER'),
-        'password': os.getenv('HBNB_MYSQL_PWD'),
-        'host': os.getenv('HBNB_MYSQL_HOST'),
-        'database': os.getenv('HBNB_MYSQL_DB')
+        'user': os.getenv('HBNB_MYSQL_USER') or 'hbnb_dev',
+        'password': os.getenv('HBNB_MYSQL_PWD') or 'hbnb_dev_pwd',
+        'host': os.getenv('HBNB_MYSQL_HOST') or 'localhost',
+        'database': os.getenv('HBNB_MYSQL_DB') or 'hbnb_dev_db'
         }
 
     def __init__(self):
@@ -31,17 +37,31 @@ class DBStorage:
     def all(self, cls=None):
         """queries on the current database session (self.__session) all
         objectsdepending of the class name"""
-        session_objs = {}
-        classes = self.__session.query(cls).all()
-        for obj in classes:
-            key = '{}.{}'.format(obj.__class__.name, obj.id)
-            session_objs[key] = obj
+        sess_objs = {}
+        classes = {"State": State, "City": City, "User": User,
+                   "Place": Place, "Review": Review, "Amenity": Amenity}
+        if cls:
+            if type(cls) == str and cls in classes:
+                for obj in self.__session.query(classes[cls]).all():
+                    key = str(obj.__class__.__name__) + "." + str(obj.id)
+                    sess_objs[key] = obj
+            elif cls.__name__ in classes:
+                for obj in self.__session.query(cls).all():
+                    key = str(obj.__class__.__name__) + "." + str(obj.id)
+                    sess_objs[key] = obj
 
-        return session_objs
+        else:
+            for key, value in classes.items():
+                for obj in self.__session.query(value).all():
+                    key = str(value.__name__) + "." + str(obj.id)
+                    sess_objs[key] = obj
+
+        return sess_objs
 
     def new(self, obj):
         """adds the object to the current database session"""
-        self.__session.add(obj)
+        if obj:
+            self.__session.add(obj)
 
     def save(self):
         """commit all changes of the current database session
@@ -55,16 +75,9 @@ class DBStorage:
 
     def reload(self):
         """reloads the DBStorage"""
-        from models.base_model import BaseModel, Base
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
+
         Base.metadata.create_all(self.__engine)
 
         session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session)
         self.__session = Session()
-        print(self.__session.query().all())
