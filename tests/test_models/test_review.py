@@ -7,6 +7,7 @@ import unittest
 import os
 from os import getenv
 
+
 class test_review(test_basemodel):
     """ """
 
@@ -15,6 +16,7 @@ class test_review(test_basemodel):
         super().__init__(*args, **kwargs)
         self.name = "Review"
         self.value = Review
+
     @classmethod
     def setUpClass(cls):
         """test"""

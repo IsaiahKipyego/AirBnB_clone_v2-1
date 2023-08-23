@@ -6,6 +6,7 @@ from models.base_model import BaseModel
 import unittest
 import os
 
+
 class test_City(test_basemodel):
     """ """
     @classmethod
