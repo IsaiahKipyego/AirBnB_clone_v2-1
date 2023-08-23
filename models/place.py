@@ -33,7 +33,7 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, default=0, nullable=False)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-
+        amenity_ids = []
         reviews = relationship("Review", backref="place",
                                cascade="all, delete-orphan")
         amenities = relationship("Amenity", secondary="place_amenity",
@@ -58,8 +58,8 @@ class Place(BaseModel, Base):
         def reviews(self):
             """getter attribute for reviews"""
             review_list = []
-            for review in list(models.storage.all(Review).values()):
-                if review.place_id == self.id:
+            for review in self.reviews:
+                if review.place_id == Place.id:
                     review_list.append(review)
 
             return review_list
@@ -68,9 +68,10 @@ class Place(BaseModel, Base):
         def amenities(self):
             """getter for the amenities"""
             amenities = []
-            for amenity in list(models.storage.all(Amenity).values()):
-                if amenity.id in self.amenity_ids:
-                    amenities.append(amenity)
+            for a_id in self.amenity_ids:
+                key = 'Amenity.' + a_id
+                if key in FileStorage.__objects:
+                    amenities.append(FileStorage.__objects[key])
 
             return amenities
 
