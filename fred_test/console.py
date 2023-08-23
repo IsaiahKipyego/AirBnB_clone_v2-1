@@ -225,10 +225,9 @@ class HBNBCommand(cmd.Cmd):
 
         obj_list = []
         args = args.split(' ')
-
-        if len(args) == 1:
+        if len(args[0]) < 1:
             obj_dict = storage.all()
-        elif args[0] in HBNBCommand.classes:
+        elif args[0] in HBNBCommand.classes.keys():
             obj_dict = storage.all(HBNBCommand.classes[args[0]])
         else:
             print("** class doesn't exist **")
