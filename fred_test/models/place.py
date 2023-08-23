@@ -3,17 +3,17 @@
 """
 
 
-from models import storage_type as st, storage
 from models.amenity import Amenity
+from models import storage_type as st
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Table, String, Integer, FLOAT, ForeignKey
 from sqlalchemy.orm import relationship
 
 place_amenity = Table(
-    "place_amenity",
-    Column('place_id', String(60), Base.metadata,
+    "place_amenity",Base.metadata,
+    Column('place_id', String(60),
            ForeignKey('places.id'), primary_key=True,  nullable=False),
-    Column('amenity_id', String(60), Base.metadata,
+    Column('amenity_id', String(60),
            ForeignKey('amenities.id'), primary_key=True,  nullable=False)
 )
 
