@@ -1,21 +1,21 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project
-    class attribute __tablename__
-        represents the table name, places
-
-
-
-        class attribute latitude
-            represents a column containing a float
-            can be null
-        class attribute longitude
-        represents a column containing a float
-        can be null
 """
+
+
+from models import storage_type as st, storage
+from models.amenity import Amenity
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Integer, FLOAT, ForeignKey
+from sqlalchemy import Column, Table, String, Integer, FLOAT, ForeignKey
 from sqlalchemy.orm import relationship
 
+place_amenity = Table(
+    "place_amenity",
+    Column('place_id', String(60), Base.metadata,
+           ForeignKey('places.id'), primary_key=True,  nullable=False),
+    Column('amenity_id', String(60), Base.metadata,
+           ForeignKey('amenities.id'), primary_key=True,  nullable=False)
+)
 
 class Place(BaseModel, Base):
     """ A place to stay """
@@ -32,3 +32,18 @@ class Place(BaseModel, Base):
     longitude = Column(FLOAT, default=0)
     reviews = relationship("Review", cascade="all, delete", backref="place")
     amenity_ids = []
+    amenities = relationship("Amenity", viewonly=False)
+
+    if st != 'db':
+        @property
+        def amenities(self):
+            """returns the list of Amenity instances based on the attribute
+            amenity_ids that contains all Amenity.id linked to the Place
+            """
+            return self.amenity_ids
+
+        @amenities.setter
+        def amenities(self, obj):
+            if type(obj) == Amenity and obj.id not in self.amenity_ids:
+                self.amenity_ids.append(obj.id)
+
