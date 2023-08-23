@@ -19,10 +19,10 @@ class DBStorage:
     __session = None
     __envs = {
         'env': os.getenv('HBNB_ENV'),
-        'user': os.getenv('HBNB_MYSQL_USER') or 'hbnb_dev',
-        'password': os.getenv('HBNB_MYSQL_PWD') or 'hbnb_dev_pwd',
-        'host': os.getenv('HBNB_MYSQL_HOST') or 'localhost',
-        'database': os.getenv('HBNB_MYSQL_DB') or 'hbnb_dev_db'
+        'user': os.getenv('HBNB_MYSQL_USER'),
+        'password': os.getenv('HBNB_MYSQL_PWD'),
+        'host': os.getenv('HBNB_MYSQL_HOST'),
+        'database': os.getenv('HBNB_MYSQL_DB')
         }
 
     def __init__(self):
@@ -38,6 +38,8 @@ class DBStorage:
         """queries on the current database session (self.__session) all
         objectsdepending of the class name"""
         sess_objs = {}
+        # classes = {"State": State, "City": City, "User": User,
+        #            "Place": Place, "Review": Review, "Amenity": Amenity}
         classes = {"State": State, "City": City}
         if cls:
             if type(cls) == str and cls in classes:
