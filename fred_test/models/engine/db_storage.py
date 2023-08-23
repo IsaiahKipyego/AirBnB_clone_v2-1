@@ -38,8 +38,8 @@ class DBStorage:
         """queries on the current database session (self.__session) all
         objectsdepending of the class name"""
         sess_objs = {}
-        classes = {"State": State, "City": City, "User": User,
-                   "Place": Place, "Review": Review, "Amenity": Amenity}
+        classes = {"State": State, "City": City,
+                   "User": User, "Place": Place, "Review": Review, "Amenity": Amenity}
         if cls:
             if type(cls) == str and cls in classes:
                 for obj in self.__session.query(classes[cls]).all():
