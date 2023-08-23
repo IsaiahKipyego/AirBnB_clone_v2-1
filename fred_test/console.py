@@ -118,7 +118,7 @@ class HBNBCommand(cmd.Cmd):
         """Checks if is float"""
         _str = str(string).replace(".", "").strip("-")
 
-        if  _str.isnumeric():
+        if _str.isnumeric():
             return True
         else:
             return False
@@ -143,12 +143,11 @@ class HBNBCommand(cmd.Cmd):
                 val = val.replace("_", " ").strip("'" + '"')
                 val = int(val) if val.isnumeric() else val
                 val = float(val) if HBNBCommand.isfloat(val) else val
-
                 new_instance.__dict__[key] = val
 
-        storage.save()
+        # storage.save()
         print(new_instance.id)
-        storage.save()
+        new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -223,21 +222,22 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
-        print_list = []
 
-        if args:
-            args = args.split(' ')[0]  # remove possible trailing args
-            if args not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+        obj_list = []
+        args = args.split(' ')
+
+        if len(args) == 1:
+            obj_dict = storage.all()
+        elif args[0] in HBNBCommand.classes:
+            obj_dict = storage.all(HBNBCommand.classes[args[0]])
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
-
-        print(print_list)
+            print("** class doesn't exist **")
+            return False
+        for key, val in obj_dict.items():
+            obj_list.append(str(val))
+        print("[", end="")
+        print(", ".join(obj_list), end="")
+        print("]")
 
     def help_all(self):
         """ Help information for the all command """
@@ -247,7 +247,7 @@ class HBNBCommand(cmd.Cmd):
     def do_count(self, args):
         """Count current number of class instances"""
         count = 0
-        for k, v in storage._FileStorage__objects.items():
+        for k, v in storage.all():
             if args == k.split('.')[0]:
                 count += 1
         print(count)
