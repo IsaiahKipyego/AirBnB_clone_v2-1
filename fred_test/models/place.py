@@ -10,11 +10,15 @@ from sqlalchemy import Column, Table, String, Integer, FLOAT, ForeignKey
 from sqlalchemy.orm import relationship
 
 place_amenity = Table(
-    "place_amenity",Base.metadata,
+    "place_amenity", Base.metadata,
     Column('place_id', String(60),
-           ForeignKey('places.id'), primary_key=True,  nullable=False),
+           ForeignKey('places.id'),
+           primary_key=True,
+           nullable=False),
     Column('amenity_id', String(60),
-           ForeignKey('amenities.id'), primary_key=True,  nullable=False)
+           ForeignKey('amenities.id'),
+           primary_key=True,
+           nullable=False)
 )
 
 class Place(BaseModel, Base):
@@ -32,7 +36,7 @@ class Place(BaseModel, Base):
     longitude = Column(FLOAT, default=0)
     reviews = relationship("Review", cascade="all, delete", backref="place")
     amenity_ids = []
-    amenities = relationship("Amenity", viewonly=False)
+    amenities = relationship("Amenity", secondary="place_amenity", back_populates="place_amenities", viewonly=False)
 
     if st != 'db':
         @property
