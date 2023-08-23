@@ -4,7 +4,7 @@
 
 
 from models.amenity import Amenity
-from models import storage_type as st
+import os
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Table, String, Integer, FLOAT, ForeignKey
 from sqlalchemy.orm import relationship
@@ -38,7 +38,7 @@ class Place(BaseModel, Base):
     amenity_ids = []
     amenities = relationship("Amenity", secondary="place_amenity", back_populates="place_amenities", viewonly=False)
 
-    if st != 'db':
+    if os.getenv('HBNB_TYPE_STORAGE') != 'db':
         @property
         def amenities(self):
             """returns the list of Amenity instances based on the attribute
