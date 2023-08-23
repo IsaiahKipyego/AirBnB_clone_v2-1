@@ -41,7 +41,7 @@ class BaseModel:
             if key == '_sa_instance_state':
                 continue
             dict_rep[key] = val
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        return '[{}] ({}) {}'.format(cls, self.id, dict_rep)
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
