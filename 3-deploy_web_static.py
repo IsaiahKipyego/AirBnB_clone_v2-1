@@ -4,11 +4,12 @@ creates and deploys an archive file to the server
 """
 import os.path
 from datetime import datetime
-from fabric.api import env, local, put, run
+from fabric.api import env, local, put, run, run_once
 
 env.hosts = ["54.227.128.86", "54.237.40.109"]
 
 
+@run_once
 def do_pack():
     """Create a tar gzipped archive of the directory web_static."""
     dt = datetime.utcnow()
