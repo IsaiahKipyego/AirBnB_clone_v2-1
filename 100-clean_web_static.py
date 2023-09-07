@@ -5,6 +5,8 @@ cleans out of date archives
 import os
 from fabric.api import env, run, run_once
 
+env.hosts = ["54.227.128.86", "54.237.40.109"]
+
 
 def do_clean(number=0):
     """Deletes out-of-date archives of the static files.
