@@ -3,28 +3,8 @@
 sets up server for deployment
 """
 from fabric.api import env, run, put
-from os.path import exists, isdir
-from fabric.operations import local
-from datetime import datetime
+from os.path import exists
 env.hosts = ["54.227.128.86", "54.237.40.109"]
-
-
-def do_pack():
-    """
-    compresses a version of a file and creates a directory if missing
-    """
-    # check if directory is present
-    if not isdir("versions"):
-        if local("mkdir -p versions").failed:
-            return None
-    # create the name of file with current time
-    location = 'versions/web_static_{}.tgz'.format(
-        datetime.utcnow().strftime("%Y%m%d%H%M%S"))
-
-    # compress the file
-    if local("tar -cvzf {} web_static".format(location)).failed:
-        return None
-    return location
 
 
 def do_deploy(archive_path):
