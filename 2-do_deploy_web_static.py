@@ -24,7 +24,7 @@ def do_deploy(archive_path):
         run("tar -xzf /tmp/{}.tgz -C /data/web_static/releases/{}/"
             .format(folder, folder))
         run("rm /tmp/{}.tgz".format(folder))
-        run("mv /data/web_static/releases/{}/web_static/*\
+        run("cp -r /data/web_static/releases/{}/web_static/*\
         /data/web_static/releases/{}/".format(folder, folder))
         run("rm -rf /data/web_static/releases/{}/web_static".format(folder))
         run("rm -rf /data/web_static/current")
