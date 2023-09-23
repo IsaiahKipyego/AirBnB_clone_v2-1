@@ -28,11 +28,11 @@ class DBStorage:
     def __init__(self):
         """instantiates new DBStorage"""
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
-                           .format(DBStorage.__envs['user'],
-                                   DBStorage.__envs['password'],
-                                   DBStorage.__envs['host'],
-                                   DBStorage.__envs['database']),
-                                   pool_pre_ping=True)
+                                      .format(DBStorage.__envs['user'],
+                                              DBStorage.__envs['password'],
+                                              DBStorage.__envs['host'],
+                                              DBStorage.__envs['database']),
+                                      pool_pre_ping=True)
 
     def all(self, cls=None):
         """queries on the current database session (self.__session) all
@@ -70,14 +70,21 @@ class DBStorage:
 
     def delete(self, obj=None):
         """delete from the current database session obj if not None"""
-        if obj != None:
+        if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):
         """reloads the DBStorage"""
-
         Base.metadata.create_all(self.__engine)
 
         session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session)
+
         self.__session = Session()
+
+    def close(self):
+        """
+        closes the session after it's complete
+        """
+        self.__session.close()
+        self.reload()
