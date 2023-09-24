@@ -31,6 +31,25 @@ section.filters button:hover {
     border-right: 1px solid #DDDDDD;
     line-height: 100%;
 }
+
+.filters div.locations ul.popover li h2 {
+    font-size: 16px;
+    margin-left: 35px;
+}
+
+.filters div.locations ul.popover li ul {
+    list-style: none;
+}
+
+.filters div.locations ul.popover li ul li {
+    margin-left: 12px;
+    padding-bottom: 10px;
+}
+
+.filters div.locations:hover ul.popover {
+    visibility: visible;
+}
+
 .filters div.amenities {
     position: absolute;
     height: 100%;
@@ -38,6 +57,35 @@ section.filters button:hover {
     left: 25%;
     line-height: 100%;
 }
+
+.filters ul.popover {
+    position: absolute;
+    visibility: hidden;
+    margin: 0px;
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-top: 30px;
+    padding-bottom: 25px;
+    z-index: 1;
+    background-color: #FAFAFA;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px;
+    width: 100%;
+    top: 70px;
+    list-style: none;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+.filters div.amenities ul.popover li {
+    margin-left: 50px;
+    padding-bottom: 10px;
+}
+
+.filters div.amenities:hover ul.popover {
+    visibility: visible;
+}
+
 .filters h3 {
     position: absolute;
     font-weight: 600;
