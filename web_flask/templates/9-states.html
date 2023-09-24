@@ -5,16 +5,12 @@
     </HEAD>
     <BODY>
         {% if city %}
-        <H1>States</H1>
-	<H3>Cities</H3>
+        <H1>State: {{ state.name }}</H1>
+	<H3>Cities:</H3>
         <UL>
-            <LI>{{ state.id }}: <B>{{ state.name }}</B>
-	        <UL>
-                    {% for city in state.cities|sort(attribute='name') %}
-                    <LI>{{ city.id }}: <B>{{ city.name }}</B></LI>
-                    {% endfor %}
-                </UL>
-	    </LI>
+            {% for city in state.cities|sort(attribute='name') %}
+            <LI>{{ city.id }}: <B>{{ city.name }}</B></LI>
+            {% endfor %}
         </UL>
 	{% else %}
 	{%- if not_found %}
