@@ -15,7 +15,6 @@ def cities_by_states():
     displays the states in the database
     """
     states = storage.all(State).values()
-    states = sorted(states, key=lambda state: state.name)
 
     return render_template('8-cities_by_states.html', states=states)
 
